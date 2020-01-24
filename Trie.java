@@ -13,10 +13,32 @@ public class Trie implements ITrie {
     @Override
     public int hashCode()  // might have to fix you
     {
+        boolean hadKids = false;
+        int total  = 0;
         StringBuilder builder = new StringBuilder();
-        constructHash(root, builder);
-        int total = hashNum;
-        hashNum = 0;
+        int runningTotal = 0;
+        for (int i = 0; i < 26; i++)
+        {
+            if (root.getKids()[i] != null)
+            {
+                int cindex = i + 'a';
+                runningTotal += cindex;
+                hadKids = true;
+            }
+        }
+        if(!hadKids)
+        {
+            runningTotal = 6;
+        }
+        //constructHash(root, builder);
+        if (wordCount != 0)
+        {
+            total = runningTotal / frequency - nodeCount;
+        }
+        else
+        {
+            total = (runningTotal - frequency)  * nodeCount;
+        }
         return total;
     }
 
@@ -168,6 +190,7 @@ public class Trie implements ITrie {
         {
             if(n.getValue() == 0)
             {
+                hashNum += n.hashCode();
                 frequency++;
             }
             n.incrementFrequency();
